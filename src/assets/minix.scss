@@ -1,0 +1,8 @@
+@mixin clearf {
+  &::after {
+    content: '';
+    display: block;
+    clear: both;
+    zoom: 1;
+  }
+}
