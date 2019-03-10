@@ -8,7 +8,7 @@
           </h2>
           <div class="main">
             <div class="main_form-item">
-              旧密码
+              旧密码：
               <el-input
                 type="password"
                 :clearable="true"
@@ -35,8 +35,8 @@
               </el-input>
             </div>
             <div class="main_form-item">
-              <el-button type="warning" @click="submit">确认修改</el-button>
-              <el-button type="danger" @click="resetInput">重置</el-button>
+              <el-button type="success" @click="submit">确认修改</el-button>
+              <el-button type="primary" @click="toLogin">去登陆</el-button>
             </div>
           </div>
         </section>
@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import store from '@/store'
 export default {
   data () {
     return {
@@ -99,23 +100,30 @@ export default {
         })
       } else {
         // TODO:
+        let msg = '修改成功, 请登录'
+        let type = 'success'
+        this.$router.push('/login')
         this.$message({
           showClose: true,
-          message: '修改成功',
-          type: 'success'
+          message: msg,
+          type: type
         })
       }
     },
-    resetInput () {
-      this.oldPassword = ''
-      this.newPassword = ''
-      this.secondNewPassword = ''
+    toLogin () {
+      this.$router.push('/login')
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    store.commit('hideMenu', true)
+    next()
   }
 }
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/style/base.scss';
+
 .wrapper {
   .passwd-card {
     max-width: 700px;
@@ -124,6 +132,9 @@ export default {
   }
   .main_form-item {
     padding: 10px 0;
+  }
+  .el-input {
+    width: 100%;
   }
 }
 </style>

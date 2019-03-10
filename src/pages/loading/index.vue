@@ -13,22 +13,29 @@
 </style>
 
 <script>
-  export default {
-    data () {
-      return {}
-    },
-    created () {
-      let isLogin = false
-      setTimeout(() => {
-        if (isLogin) {
-          // TODO: 跳有权限页面
-        } else {
-          // TODO: 登录页面
-          this.$router.push({path: '/login'})
-        }
-      }, 3000)
-    }
-  };
+import {routes, roleRoutes} from '@/router'
+export default {
+  data () {
+    return {}
+  },
+  created () {
+    let isLogin = false
+    setTimeout(() => {
+      if (isLogin) {
+        // TODO: 跳有权限页面
+      } else {
+        // TODO: 登录页面
+        this.$router.push({path: '/login'})
+        // 根据权限展示路由，下次封装到mutation里
+        let menus = roleRoutes.adminRoutes.map(val => {
+          console.log(routes.filter(v => v.path === val))
+          return routes.filter(v => v.path === val)[0]
+        })
+        this.$store.commit('setMenu', menus)
+      }
+    }, 1000)
+  }
+};
 </script>
 <style lang="scss">
   .el-loading-spinner {
@@ -36,6 +43,7 @@
   }
 </style>
 <style lang="scss" scoped>
+@import '@/assets/style/base.scss';
   .wrapper {
     position: fixed;
     top: 0;

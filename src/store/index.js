@@ -7,9 +7,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userInfo: {
-      islogin: false,
-      data: null
-    }
+      islogin: true,
+      username: '蒙娜丽莎法师'
+    },
+    hideMenu: true,
+    backgroundColor: '#fff',
+    menus: []
   },
   mutations,
   actions

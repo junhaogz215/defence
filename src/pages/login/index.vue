@@ -37,6 +37,7 @@
   </div>
 </template>
 <script>
+import store from '@/store'
 export default {
   data () {
     return {
@@ -83,6 +84,10 @@ export default {
         })
       }
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    store.commit('hideMenu', true)
+    next()
   }
 }
 </script>
@@ -90,7 +95,6 @@ export default {
 <style lang="scss" scoped>
 
 .wrapper {
-  
   .login-card {
     max-width: 700px;
     width: 100%;
@@ -98,6 +102,9 @@ export default {
   }
   .main_form-item {
     padding: 10px 0;
+  }
+  .el-input {
+    width: 100%;
   }
 }
 </style>

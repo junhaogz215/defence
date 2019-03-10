@@ -1,20 +1,19 @@
 <template>
   <div class="wrapper">
-    <header class="header">
-      <span class="header_logo">defence</span>
-      <span class="header_userinfo">
-        <span v-if="userInfo.islogin">
-          <router-link to="/login">登录</router-link>
-        </span>
-        <span v-else>
-          <span>
-            用户名：junhao
-          </span>
-          <span class="header_exit">退出</span>
-        </span>
-      </span>
-    </header>
-    <section class="container">
+    <Header class="layout_header" 
+      :logo="'defence'" 
+      :username="userInfo.username"
+      @exit="onExit"
+      @menu="onMenu"
+    ></Header>
+    <Menu 
+      class="layout_menu"
+      :class="[{hidden: hideMenu}]"></Menu>
+    <section 
+      class="layout_main"
+      @click="onMenu(true)"
+    >
+      <!-- <i class="header_menu-btn" @click="onMenu"></i> -->
       <router-view></router-view>
     </section>
   </div>
@@ -22,11 +21,30 @@
 
 <script>
 import { mapState } from 'vuex'
+import Header from './Header'
+import Menu from './Menu'
 export default {
   computed: {
     ...mapState({
-      userInfo: state => state.userInfo
+      userInfo: state => state.userInfo,
+      hideMenu: state => state.hideMenu
     })
+  },
+  components: {
+    Header,
+    Menu
+  },
+  data () {
+    return {
+    }
+  },
+  methods: {
+    onExit () {
+      this.$message('点击了退出按钮')
+    },
+    onMenu (hide) {
+      this.$store.commit('hideMenu', hide)
+    }
   },
   created () {
   }
@@ -34,43 +52,56 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  @import '@/assets/minix.scss';
+@import '@/assets/style/minix.scss';
+.wrapper {
+  padding-top: 60px;
+  width: 100%;
+  background: #fff;   
+  .layout_header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0; 
+    z-index: 1;
+  }
+  .layout_menu {
+    overflow: hidden;
+    position: fixed;
+    z-index: 2;
+    top: 62px;
+    left: 0;
+    bottom: 0;
+    width: 200px;
+    transition: all .3s ease-in-out 0s;
+  }
+  .layout_main {
+    background: #fff;
+    position: relative;
+    min-height: 500px;
+    margin-left: 200px;
+    transition: all .3s ease-in-out 0s;
+  }
+}
+@media screen and (max-width: 900px) {
   .wrapper {
-    padding-top: 60px;
-    width: 100%;
-    background: #fff;    
-    .header {
-      @include clearf;
-      padding: 0 20px;
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      min-height: 60px;
-      background: rgba(255, 255, 255, 0.795);
-      line-height: 60px;
-      white-space: nowrap;
-      .header_logo {
-        font-size: 20px;
-        font-weight: 700;
-      }
-      .header_userinfo {
-        float: right;
-      }
-      box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5);
-      .header_exit {
-        margin-left: 20px;
-        text-decoration: underline;
-        &:hover {
-          color: rgb(176, 220, 231);
-          cursor: pointer;
-        }
+    padding-top: 40px;
+    .layout_menu {
+      top: 42px;
+      &.hidden {
+        width: 0px;
       }
     }
-    .container {
+    .layout_main {
       min-height: 500px;
+      margin-left: 0px;
+      &.hidden-menu {
+        margin-left: 0;
+      }
+      .header_menu-btn {
+        display: none;
+      }
     }
   }
 
-
+}
 </style>
