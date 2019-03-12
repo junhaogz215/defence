@@ -25,10 +25,20 @@
               </el-input>
             </div>
             <div class="main_form-item">
+              <div>选择身份：</div>
+              <el-select v-model="selectedRole" placeholder="选择身份">
+                <el-option 
+                  v-for="(val, i) in roles"
+                  :key="val"
+                  :value="val"
+                  v-text="i"></el-option>
+              </el-select>
+            </div>
+            <div class="main_form-item">
               <el-button type="primary" @click="submit">登录</el-button>
               <el-button type="success" @click="toPassword">
                 修改密码
-            </el-button>
+              </el-button>
             </div>
           </div>
         </section>
@@ -39,11 +49,18 @@
 <script>
 import store from '@/store'
 import api from '@/api'
+import md5 from 'js-md5'
 export default {
   data () {
     return {
       username: '',
-      password: ''
+      password: '',
+      selectedRole: '学生',
+      roles: {
+        '学生': '3',
+        '教师': '2',
+        '管理员': '1'
+      }
     }
   },
   watch: {
@@ -60,7 +77,7 @@ export default {
         path: '/password'
       })
     },
-    submit () {
+    async submit () {
       if (!this.username || !this.password) {
         this.$message({
           message: '用户名和密码不能为空',
@@ -70,7 +87,9 @@ export default {
         return
       }
       // TODO:发送请求
-      let resData = {status: true}
+      console.log('loginResDatabefore')
+      let resData = await api.userLogin(this.username, md5(this.password), this.selectedRole)
+      console.log('loginResData', resData)
       if (resData.status) {
         this.$message({
           message: '登陆成功！',
@@ -94,6 +113,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import '@/assets/style/base.scss';
 
 .wrapper {
   .login-card {

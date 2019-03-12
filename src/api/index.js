@@ -1,12 +1,9 @@
 import axios from 'axios'
-axios.post(`http://45.40.192.128/platform/api/teacher/${1}`, {}, {
-  params: {
-    id: 1,
-    name: '途虎测试',
-    password: '124',
-    isLeader: '是',
-    role: 2
-  }
+axios.post(`http://45.40.192.128/platform/api/studentUser/registered`, {
+  name: 'junhao',
+  password: 'junhao',
+  remark: 'junhao215',
+  totalScore: 100
 }).then(data => {
   console.log('data', data)
 }).catch (err => console.log(err))
@@ -18,10 +15,8 @@ export default {
    * @param {string} role 
    */
   userLogin (userName, password, role) {
-    return axios.get('http://45.40.192.128/platform/api/user/login', {
-      params: {
-        userName, password, role
-      }
+    return axios.post('http://45.40.192.128/platform/api/user/login', {
+      userName, password, role
     })
   },
   /**

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import pages from '@/pages'
+import store from '../store'
 
 Vue.use(Router)
 const roleRoutes = {
@@ -86,6 +87,14 @@ const routes = [
     component: pages.MarkGrade
   }
 ]
+// 根据权限展示路由，下次封装到mutation里
+
+let menus = roleRoutes.adminRoutes.map(val => {
+  console.log(routes.filter(v => v.path === val))
+  return routes.filter(v => v.path === val)[0]
+})
+
+store.commit('setMenu', menus)
 export default new Router({
   routes
 })
