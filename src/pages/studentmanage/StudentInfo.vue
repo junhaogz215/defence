@@ -9,11 +9,11 @@
         size="samll"
         @click="handleAdd(clearForm)">新增</el-button>
       <el-upload
+        ref="upload"
         class="margintop"
-        action="https://jsonplaceholder.typicode.com/posts/"
-        :on-preview="handlePreview"
-        :on-remove="handleRemove"
-        :on-exceed="handleExceed"
+        action="http://45.40.192.128/platform/api/studentUser/dataImport"
+        :show-file-list="false"
+        :on-success="uploadSuccess"
         :file-list="excelFile"
         :limit="1">
         <el-button size="samll" type="primary">通过excel批量导入</el-button>
@@ -86,15 +86,6 @@ export default {
     }
   },
   methods: {
-    handleRemove(file, fileList) {
-      console.log(file, fileList);
-    },
-    handlePreview(file) {
-      console.log(file);
-    },
-    handleExceed(files, fileList) {
-      this.$message.warning(`最多上传一个文件`);
-    },
     setForm (index, row) {
       this.form.name = row && row.name
       this.form.remark = row && row.remark
@@ -104,6 +95,24 @@ export default {
       keys.map(val => {
         this.form[val] = undefined
       })
+    },
+    uploadSuccess (res, file, fileList) {
+      if (!res) return
+      console.log('fileList,', fileList)
+      this.$refs.upload.clearFiles()
+      if (res.status) {
+        this.$message({
+          message: res.msg || '文件上传成功',
+          showClose: true,
+          type: 'success'
+        })
+      } else {
+        this.$message({
+          message: res.msg || '文件上传失败',
+          showClose: true,
+          type: 'error'
+        })
+      }
     }
   },
   created () {

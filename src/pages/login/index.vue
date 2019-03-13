@@ -31,7 +31,7 @@
                   v-for="(val, i) in roles"
                   :key="val"
                   :value="val"
-                  v-text="i"></el-option>
+                  :label="i"></el-option>
               </el-select>
             </div>
             <div class="main_form-item">
@@ -55,7 +55,7 @@ export default {
     return {
       username: '',
       password: '',
-      selectedRole: '学生',
+      selectedRole: '3',
       roles: {
         '学生': '3',
         '教师': '2',
@@ -86,11 +86,10 @@ export default {
         })
         return
       }
-      // TODO:发送请求
       console.log('loginResDatabefore')
       let resData = await api.userLogin(this.username, md5(this.password), this.selectedRole)
       console.log('loginResData', resData)
-      if (resData.status) {
+      if (resData.data && resData.data.status) {
         this.$message({
           message: '登陆成功！',
           showClose: true,
@@ -98,16 +97,12 @@ export default {
         })
       } else {
         this.$message({
-          message: '用户名或密码错误',
+          message: resData.data.msg || '登陆失败',
           showClose: true,
           type: 'error'
         })
       }
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    store.commit('hideMenu', true)
-    next()
   }
 }
 </script>

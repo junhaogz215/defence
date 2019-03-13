@@ -1,12 +1,19 @@
 import axios from 'axios'
-axios.post(`http://45.40.192.128/platform/api/studentUser/registered`, {
-  name: 'junhao',
-  password: 'junhao',
-  remark: 'junhao215',
-  totalScore: 100
-}).then(data => {
-  console.log('data', data)
-}).catch (err => console.log(err))
+// import md5 from 'js-md5'
+
+// axios.post(`http://45.40.192.128/platform/api/studentUser/registered`, {
+//   name: 'junhao3',
+//   password: md5('junhao3'),
+//   remark: 'junhao215',
+//   totalScore: 100
+// }, {
+//   headers: {'Content-Type': 'application/json'}
+// }).then(data => {
+//   console.log('data', data)
+// }).catch (err => console.log(err))
+// axios.get(`http://45.40.192.128/platform/api/test/user/2`).then(data => {
+//   console.log('data', data)
+// }).catch (err => console.log(err))
 export default {
   /**
    * 用户登录

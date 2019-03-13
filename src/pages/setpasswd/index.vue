@@ -46,6 +46,7 @@
 </template>
 
 <script>
+import apis from '@/api'
 import store from '@/store'
 export default {
   data () {
@@ -100,6 +101,7 @@ export default {
         })
       } else {
         // TODO:
+
         let msg = '修改成功, 请登录'
         let type = 'success'
         this.$router.push('/login')
@@ -113,10 +115,6 @@ export default {
     toLogin () {
       this.$router.push('/login')
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    store.commit('hideMenu', true)
-    next()
   }
 }
 </script>
