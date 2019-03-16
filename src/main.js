@@ -12,7 +12,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import installComponent from '@/components'
 
-
+console.log('process.env.NODE_ENV', process.env.NODE_ENV)
 Vue.use(ElementUI)
 Vue.use(installComponent)
 Vue.use(utils)

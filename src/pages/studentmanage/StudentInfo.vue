@@ -19,7 +19,7 @@
         <el-button size="samll" type="primary">通过excel批量导入</el-button>
       </el-upload>
       <el-table
-        :data="tableData"
+        :data="tableData[currentPage]"
         style="width: 100%">
         <el-table-column
           prop="name"
@@ -49,7 +49,9 @@
         <el-pagination
           background
           layout="prev, pager, next"
-          :total="10">
+          :page-size="10"
+          :total="pages * 10"
+          :current-page.sync="currentPage">
         </el-pagination>
       </el-row>
     </el-card>
@@ -60,13 +62,16 @@
         <el-form-item label="学生姓名:">
           <el-input v-model="form.name" autocomplete="off" placeholder="请输入学生姓名"></el-input>
         </el-form-item>
+        <el-form-item v-show="isHandelAdd" label="密码:">
+          <el-input v-model="form.password" show-password autocomplete="off" placeholder="请输入登录密码"></el-input>
+        </el-form-item>
         <el-form-item label="备注:">
           <el-input v-model="form.remark" autocomplete="off" placeholder="请输入学生备注"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="dialogFormVisible = false">保 存</el-button>
+        <el-button type="primary" @click="submit">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -74,18 +79,48 @@
 
 <script>
 import template from '../ManageTemplate'
+import commonTemplate from '@/commonTemplate'
+import api from '@/api'
 export default {
-  extends: template,
+  mixins: [template, commonTemplate],
   watch: {
+    currentPage (val) {
+      this.getStudentInfo(val)
+    }
   },
   computed: {
   },
   data () {
     return {
-      excelFile: undefined
+      excelFile: undefined,
+      currentPage: 1,
+      pages: 0 // 信息总页数
     }
   },
   methods: {
+    async submit () {
+      this.dialogFormVisible = false
+      let {name, password, remark} = this.form
+      if (this.isHandelAdd) { // 注册学生信息
+        if (!name || !password) {
+          this.$message({
+            message: '姓名和密码不能为空',
+            showClose: true,
+            type: 'error'
+          })
+          return
+        } else {
+          let res = await api.studentRegister(this.form)
+          console.log('注册信息', this.form)
+          this.resMsg(res, '注册成功', '注册失败')
+          if (res && res.data && res.data.status) {
+            this.getStudentInfo(1)
+          }
+        }
+      } else {
+
+      }
+    },
     setForm (index, row) {
       this.form.name = row && row.name
       this.form.remark = row && row.remark
@@ -113,24 +148,24 @@ export default {
           type: 'error'
         })
       }
+    },
+    async getStudentInfo (page) {
+      let res = await api.getAllStudentInfo(page)
+      this.pages = res.data.data.pages
+      console.log('getAllStudentInfo', res.data.data.list)
+      if (res && res.data && res.data.status) {
+        this.$set(this.tableData, page, res.data.data.list)
+      } else {
+        this.$message({
+          message: '查询失败',
+          showClose: true,
+          type: 'error'
+        })
+      }
     }
   },
   created () {
-    this.tableData = [
-      {
-      name: '王小虎',
-      remark: '上海市普陀区金沙江路 1518 弄'
-      }, {
-        name: '王小虎',
-        remark: '上海市普陀区金沙江路 1517 弄'
-      }, {
-        name: '王小虎',
-        remark: '上海市普陀区金沙江路 1519 弄'
-      }, {
-        name: '王小虎',
-        remark: '上海市普陀区金沙江路 1516 弄'
-      }
-    ]
+    this.getStudentInfo(1)
   }
 }
 </script>

@@ -7,8 +7,12 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     userInfo: {
-      islogin: true,
-      username: '蒙娜丽莎法师'
+      isLogin: false,
+      data: {
+        userName: '',
+        role: '',
+        uid: ''
+      }
     },
     hideMenu: true,
     backgroundColor: '#fff',

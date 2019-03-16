@@ -14,11 +14,18 @@
 
 <script>
 import {routes, roleRoutes} from '@/router'
+import api from '@/api'
 export default {
   data () {
     return {}
   },
-  created () {
+  async created () {
+    let res = await api.getUserInfo()
+    if (res && res.data && res.data.status) {
+      console.log('已登录', res.data)
+    } else {
+      console.log('未登录', res.data)
+    }
     let isLogin = false
     setTimeout(() => {
       if (isLogin) {

@@ -16,6 +16,18 @@ import axios from 'axios'
 // }).catch (err => console.log(err))
 export default {
   /**
+   * 用户注销
+   */
+  logout () {
+    return axios.post('http://45.40.192.128/platform/api/user/signOut')
+  },
+  /**
+   * 获取用户登录状态
+   */
+  getUserInfo () {
+    return axios.get('http://45.40.192.128/platform/api/user/checkLoginStatus')
+  },
+  /**
    * 用户登录
    * @param {string} userName 
    * @param {string} password 
@@ -64,10 +76,8 @@ export default {
    * @param {number} subjectScore 
    */
   addSubject (subjectName, subjectScore) {
-    return axios.post('http://45.40.192.128/platform/api/subject/add', {}, {
-      params: {
-        subjectName, subjectScore
-      }
+    return axios.post('http://45.40.192.128/platform/api/subject/add', {
+      subjectName, subjectScore
     })
   },
   /**
@@ -82,8 +92,22 @@ export default {
    * @param {number} subjectScore
    */
   updateSubjectScore (id, subjectScore) {
-    return axios.post('http://45.40.192.128/platform/api/subject', {
-      id, subjectScore
+    return axios.post('http://45.40.192.128/platform/api/subject/update', {}, {
+      params: {
+        id, subjectScore
+      }
+    })
+  },
+  /**
+   * 删除科目
+   * @param {number} id
+   * @param {number} subjectScore
+   */
+  deleteSubject (id) {
+    return axios.post('http://45.40.192.128/platform/api/subject/delete', {}, {
+      params: {
+        id
+      }
     })
   },
   /**
@@ -91,7 +115,7 @@ export default {
    * @param {string} studentId
    */
   getSelfInfo (studentId) {
-    return axios.get('http://45.40.192.128/platform/api/studentUser', {
+    return axios.get('http://45.40.192.128/platform/api/studentUser/query', {
       params: {
         studentId
       }
@@ -102,7 +126,7 @@ export default {
    * @param {{id:string, name:string, password:string, totalScore:number, remark:string}} params
    */
   updateStudentInfo (params) {
-    return axios.post('http://45.40.192.128/platform/api/studentUser', {
+    return axios.post('http://45.40.192.128/platform/api/studentUser/update', {
       ...params
     })
   },
@@ -126,12 +150,15 @@ export default {
     })
   },
   /**
-   * excel导入学生信息
-   * @param {} file 
-   * post  /studentUser/dataImport 
-   * TODO:
+   * 查询所有学生信息
+   * @param {number} page 
    */
-  importStudentDatas (file) {
+  getAllStudentInfo (page) {
+    return axios.get('http://45.40.192.128/platform/api/studentUser/infos', {
+      params: {
+        page
+      }
+    })
   },
   /**
    * 更新学生答辩成绩

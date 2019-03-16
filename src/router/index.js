@@ -20,7 +20,9 @@ const roleRoutes = {
     '/gradeinfo',
     '/gradecharts',
     '/markgrade',
-    '/clockingin'
+    '/clockingin',
+    '/mygrade',
+    '/noaccess'
   ]
 }
 const teacherRoutes = [
@@ -30,6 +32,11 @@ const routes = [
     path: '/',
     name: 'loading...',
     component: pages.Loading
+  },
+  {
+    path: '/noaccess',
+    name: '无权访问',
+    component: pages.NoAccess
   },
   {
     path: '/login',
@@ -63,7 +70,7 @@ const routes = [
   },
   {
     path: '/projectmange',
-    name: '项目管理',
+    name: '科目管理',
     component: pages.ProjectManage
   },
   {
@@ -85,6 +92,11 @@ const routes = [
     path: '/markgrade',
     name: '成绩评定',
     component: pages.MarkGrade
+  },
+  {
+    path: '/mygrade',
+    name: '成绩查询',
+    component: pages.MyGrade
   }
 ]
 // 根据权限展示路由，下次封装到mutation里

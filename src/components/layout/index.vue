@@ -2,7 +2,7 @@
   <div class="wrapper">
     <Header class="layout_header" 
       :logo="'defence'" 
-      :username="userInfo.username"
+      :username="userInfo.data.userName"
       @exit="onExit"
       @menu="onMenu"
     ></Header>
@@ -13,7 +13,6 @@
       class="layout_main"
       @click="onMenu(true)"
     >
-      <!-- <i class="header_menu-btn" @click="onMenu"></i> -->
       <router-view></router-view>
     </section>
   </div>
@@ -23,7 +22,10 @@
 import { mapState } from 'vuex'
 import Header from './Header'
 import Menu from './Menu'
+import api from '@/api'
+import commonTemplate from '@/commonTemplate'
 export default {
+  mixins: [commonTemplate],
   computed: {
     ...mapState({
       userInfo: state => state.userInfo,
@@ -40,7 +42,19 @@ export default {
   },
   methods: {
     onExit () {
-      this.$message('点击了退出按钮')
+      this.$confirm('确认注销账户?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'error'
+      }).then(async () => {
+        let res = await api.logout()
+        this.resMsg(res, '注销成功', '注销失败')
+        if (res && res.data && res.data.status) {
+          localStorage.setItem('defenceIslogin', '')
+          this.$router.push('/login')
+          this.$store.commit('logout')
+        }
+      })
     },
     onMenu (hide) {
       this.$store.commit('hideMenu', hide)

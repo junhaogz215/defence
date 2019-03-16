@@ -34,10 +34,6 @@ export default {
           type: 'warning'
         }).then(() => {
           successCallback && successCallback(index, row)
-          this.$message({
-            type: 'success',
-            message: '删除成功!'
-          });
         }).catch(() => {
           failCallback && failCallback(index, row)
           this.$message({

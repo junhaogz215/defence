@@ -50,7 +50,14 @@
 import store from '@/store'
 import api from '@/api'
 import md5 from 'js-md5'
+import commonTemplate from '@/commonTemplate'
 export default {
+  mixins: [commonTemplate],
+  computed: {
+    userInfo () {
+      return store.state.userInfo
+    }
+  },
   data () {
     return {
       username: '',
@@ -86,21 +93,36 @@ export default {
         })
         return
       }
-      console.log('loginResDatabefore')
-      let resData = await api.userLogin(this.username, md5(this.password), this.selectedRole)
-      console.log('loginResData', resData)
-      if (resData.data && resData.data.status) {
-        this.$message({
-          message: '登陆成功！',
-          showClose: true,
-          type: 'success'
-        })
+      let res = await api.userLogin(this.username, md5(this.password), this.selectedRole)
+
+      this.resMsg(res, '登陆成功', '登陆失败')
+      if (res.data.status) {
+        console.log('login', res)
+        localStorage.setItem('defenceIslogin', 'true')
+        this.$store.commit('setUserInfo', res.data)
+        this.jumpOut(+this.userInfo.data.role)
       } else {
-        this.$message({
-          message: resData.data.msg || '登陆失败',
-          showClose: true,
-          type: 'error'
-        })
+        localStorage.setItem('defenceIslogin', '')
+        this.$store.commit('logout')
+      }
+      console.log('store.state', this.$store.state)
+    },
+    jumpOut (role) {
+      switch (role) {
+        // 管理员
+        case 1:
+          this.$router.push('/studentinfo')
+          break
+        // 教师
+        case 2:
+          this.$router.push('/markgrade')
+          break
+        // 学生
+        case 3:
+          this.$router.push('/mygrade')
+          break
+        default:
+          this.$message('权限信息缺失')
       }
     }
   }
