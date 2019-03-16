@@ -50,7 +50,7 @@ export default {
         let res = await api.logout()
         this.resMsg(res, '注销成功', '注销失败')
         if (res && res.data && res.data.status) {
-          localStorage.setItem('defenceIslogin', '')
+          localStorage.setItem('userInfo', '{}')
           this.$router.push('/login')
           this.$store.commit('logout')
         }
@@ -79,7 +79,7 @@ export default {
     z-index: 1;
   }
   .layout_menu {
-    overflow: hidden;
+    overflow: auto;
     position: fixed;
     z-index: 2;
     top: 62px;

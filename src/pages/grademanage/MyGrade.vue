@@ -12,35 +12,48 @@
           width="180">
         </el-table-column>
         <el-table-column
-          prop="score"
-          label="学生成绩"
+          prop="totalScore"
+          label="答辩总分"
+          width="180">
+        </el-table-column>
+        <el-table-column
+          prop="remark"
+          label="备注"
           width="180">
         </el-table-column>
       </el-table>
-      <!-- <el-row style="padding: 20px 0">
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :total="10">
-        </el-pagination>
-      </el-row> -->
     </el-card>
 </template>
 
 <script>
+import api from '@/api'
 export default {
   data () {
     return {
       tableData: [
         {
-          name: 'ceshi',
-          score: '100'
+          name: '',
+          totalScore: '',
+          remark: ''
         }
       ]
     }
   },
-  async created () {
-    // let res = await api.
+  created () {
+    this.getInfo()
+  },
+  methods: {
+    async getInfo () {
+      let userInfo = this.$store.state.userInfo
+      if (!userInfo.isLogin) return
+      let res = await api.getSelfInfo(userInfo.data.id || userInfo.data.uid)
+      console.log(res)
+      if (res && res.data && res.data.status) {
+        this.tableData[0] = res.data.data
+      } else {
+        this.$message('查询信息失败')
+      }
+    }
   }
 }
 </script>

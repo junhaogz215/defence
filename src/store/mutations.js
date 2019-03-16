@@ -14,11 +14,13 @@ export default {
       state.userInfo.isLogin = true
       Object.assign(state.userInfo.data, payLoad.data) 
     } else {
+      localStorage.setItem('userInfo', '{}')
       clearUserInfo()
     }
     console.log('setUserInfo:', state.userInfo)
   },
   logout (state) {
+    localStorage.setItem('userInfo', '{}')
     clearUserInfo(state)
   },
   hideMenu (state, payLoad) {

@@ -9,3 +9,14 @@ div {
 .margintop {
   margin-top: 10px;
 }
+
+.condition {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;;
+  justify-content: flex-start;
+  .condition-item {
+    margin-right: 10px;
+  }
+}

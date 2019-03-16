@@ -12,6 +12,7 @@
               <el-input
                 type="password"
                 :clearable="true"
+                autocomplete="off"
                 placeholder="请输入旧用户密码"
                 v-model="oldPassword">
               </el-input>
@@ -21,6 +22,7 @@
               <el-input
                 :clearable="true"
                 type="password"
+                autocomplete="off"
                 placeholder="请输入新密码"
                 v-model="newPassword">
               </el-input>
@@ -30,9 +32,20 @@
               <el-input
                 :clearable="true"
                 type="password"
+                autocomplete="off"
                 placeholder="请再次输入新密码"
                 v-model="secondNewPassword">
               </el-input>
+            </div>
+            <div class="main_form-item">
+              <div>选择身份：</div>
+              <el-select v-model="selectedRole" placeholder="选择身份">
+                <el-option 
+                  v-for="(val, i) in roles"
+                  :key="val"
+                  :value="val"
+                  :label="i"></el-option>
+              </el-select>
             </div>
             <div class="main_form-item">
               <el-button type="success" @click="submit">确认修改</el-button>
@@ -46,14 +59,21 @@
 </template>
 
 <script>
-import apis from '@/api'
+import api from '@/api'
 import store from '@/store'
+import commonTemplate from '@/commonTemplate'
 export default {
+  mixins: [commonTemplate],
   data () {
     return {
+      selectedRole: '2',
       oldPassword: '',
       newPassword: '',
-      secondNewPassword: ''
+      secondNewPassword: '',
+      roles: {
+        '学生': '3',
+        '教师': '2'
+      }
     }
   },
   watch: {
@@ -68,7 +88,7 @@ export default {
     }
   },
   methods: {
-    submit () {
+    async submit () {
       if (!this.oldPassword) {
         this.$message({
           showClose: true,
@@ -100,19 +120,23 @@ export default {
           type: 'error'
         })
       } else {
-        // TODO:
-
-        let msg = '修改成功, 请登录'
-        let type = 'success'
-        this.$router.push('/login')
-        this.$message({
-          showClose: true,
-          message: msg,
-          type: type
+        let userInfo = store.state.userInfo.data
+        console.log('userinfo', userInfo)
+        let res = await api.updatePassword({
+          id: userInfo.id || userInfo.uid,
+          userName: userInfo.userName,
+          role: this.selectedRole,
+          password: this.newPassword,
+          oldPassword: this.oldPassword
         })
+        this.resMsg(res, '修改成功，请重新登录', '修改失败')
+        if (res && res.data && res.data.status) {
+          this.toLogin()
+        }
       }
     },
     toLogin () {
+      this.$store.commit('logout')
       this.$router.push('/login')
     }
   }

@@ -20,4 +20,14 @@ body {
     color: #303133;
   }
 }
+@media screen and (max-width: 900px) {
+  .el-dialog {
+    width: 70%;
+  }
+}
+@media screen and (max-width: 500px) {
+  .el-dialog {
+    width: 100%;
+  }
+}
 </style>

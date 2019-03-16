@@ -7,7 +7,8 @@ Vue.use(Router)
 const roleRoutes = {
   touristRoutes: [
     '/login',
-    '/password'
+    '/password',
+    '/noaccess'
   ],
   adminRoutes: [
     '/login',
@@ -22,6 +23,23 @@ const roleRoutes = {
     '/markgrade',
     '/clockingin',
     '/mygrade',
+    '/noaccess'
+  ],
+  teacherRoutes: [
+    '/studentinfo',
+    '/password',
+    '/markgrade',
+    '/noaccess'
+  ],
+  leaderRoutes: [
+    '/clockingin',
+  ],
+  instructorRoutes: [
+    '/studentinfo'
+  ],
+  studentRoutes: [
+    '/mygrade',
+    '/password',
     '/noaccess'
   ]
 }

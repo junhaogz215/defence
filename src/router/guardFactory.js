@@ -6,7 +6,7 @@ export default function (router) {
   router.beforeEach(async (to, from, next) => {
     if (to.path === '/noaccess') next()
     let userInfo = store && store.state && store.state.userInfo
-    let storageLoginStatus = localStorage.getItem('defenceIslogin')
+    let storageUserInfo = JSON.parse(localStorage.getItem('userInfo'))
     console.log('beforeEachUserInfo:', userInfo)
     if (!userInfo) {
       Message('未登录用户只能访问登录页面')
@@ -15,11 +15,12 @@ export default function (router) {
     }
 
     // 如果storage中的状态是已登录那就获取当前用户登录信息
-    if (!userInfo.isLogin && storageLoginStatus) {
-      let res = await api.getUserInfo()
-      if (res && res.data && res.data.status) {
-        store.commit('setUserInfo', res)
-      }
+    if (!userInfo.isLogin && storageUserInfo) {
+      // let res = await api.getUserInfo()
+      // if (res && res.data && res.data.status) {
+        // store.commit('setUserInfo', storageUserInfo)
+        // }
+      store.commit('setUserInfo', storageUserInfo)
     }
 
     if (!userInfo.isLogin) {

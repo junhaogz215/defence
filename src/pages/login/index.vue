@@ -49,7 +49,7 @@
 <script>
 import store from '@/store'
 import api from '@/api'
-import md5 from 'js-md5'
+// import md5 from 'js-md5'
 import commonTemplate from '@/commonTemplate'
 export default {
   mixins: [commonTemplate],
@@ -93,19 +93,17 @@ export default {
         })
         return
       }
-      let res = await api.userLogin(this.username, md5(this.password), this.selectedRole)
+      let res = await api.userLogin(this.username, this.password, this.selectedRole)
+      // let res = await api.userLogin(this.username, md5(this.password), this.selectedRole)
 
       this.resMsg(res, '登陆成功', '登陆失败')
       if (res.data.status) {
-        console.log('login', res)
-        localStorage.setItem('defenceIslogin', 'true')
+        localStorage.setItem('userInfo', JSON.stringify(res.data))
         this.$store.commit('setUserInfo', res.data)
         this.jumpOut(+this.userInfo.data.role)
       } else {
-        localStorage.setItem('defenceIslogin', '')
         this.$store.commit('logout')
       }
-      console.log('store.state', this.$store.state)
     },
     jumpOut (role) {
       switch (role) {

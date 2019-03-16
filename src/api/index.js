@@ -1,4 +1,5 @@
 import axios from 'axios'
+// axios.defaults.withCredentials = true
 // import md5 from 'js-md5'
 
 // axios.post(`http://45.40.192.128/platform/api/studentUser/registered`, {
@@ -15,6 +16,15 @@ import axios from 'axios'
 //   console.log('data', data)
 // }).catch (err => console.log(err))
 export default {
+  /**
+   * 修改密码
+   * @params {{id, password, oldPassword, role, userName}} params
+   */
+  updatePassword (params) {
+    return axios.post('http://45.40.192.128/platform/api/user/updatePwd', {
+      ...params
+    })
+  },
   /**
    * 用户注销
    */
@@ -51,6 +61,12 @@ export default {
     })
   },
   /**
+   * 查询组长列表
+   */
+  getLeaderInfos () {
+    return axios.get('http://45.40.192.128/platform/api/teacher/leaders')
+  },
+  /**
    * 注册教师
    * @param {{id, name, password, isLeader, leaderId, role}} params 
    */
@@ -60,14 +76,21 @@ export default {
     })
   },
   /**
+   * 删除教师
+   * @param {string} id 
+   */
+  deleteTeacherById (id) {
+    return axios.post('http://45.40.192.128/platform/api/admin/deleteTeacher', {
+      id
+    })
+  },
+  /**
    * 更新教师信息
    * @param {{id,name,password,isLeader,leaderId,role}} params 
    */
   updateTeacherInfo (params) {
-    return axios.post(`http://45.40.192.128/platform/api/teacher`, {}, {
-      params: {
-        ...params
-      }
+    return axios.post(`http://45.40.192.128/platform/api/teacher/update`,{
+      ...params
     })
   },
   /**
@@ -104,10 +127,8 @@ export default {
    * @param {number} subjectScore
    */
   deleteSubject (id) {
-    return axios.post('http://45.40.192.128/platform/api/subject/delete', {}, {
-      params: {
-        id
-      }
+    return axios.post('http://45.40.192.128/platform/api/subject/delete', {
+      id
     })
   },
   /**
@@ -119,6 +140,15 @@ export default {
       params: {
         studentId
       }
+    })
+  },
+   /**
+   * 删除学生
+   * @param {string} id 
+   */
+  deleteStudentById (id) {
+    return axios.post('http://45.40.192.128/platform/api/admin/deleteTeacher', {
+      id
     })
   },
   /**
@@ -153,11 +183,16 @@ export default {
    * 查询所有学生信息
    * @param {number} page 
    */
-  getAllStudentInfo (page) {
+  getAllStudentInfo (page, orderType, start) {
+    let params = {
+      page,
+      orderType
+    }
+    if (start) {
+      params.start = start
+    }
     return axios.get('http://45.40.192.128/platform/api/studentUser/infos', {
-      params: {
-        page
-      }
+      params
     })
   },
   /**
@@ -220,6 +255,23 @@ export default {
   addNewGrade (params) {
     return axios.post('http://45.40.192.128/platform/api/studentScore/add', {
       ...params
+    })
+  },
+  /**
+   * 成绩导出
+   * @param {string} ids 
+   */
+  outputScore (ids) {
+    // return axios.post('http://45.40.192.128/platform/api/studentScore', {}, {
+    //   params: {
+    //     ids: ids || null
+    //   }
+    // })
+    return axios.post('http://45.40.192.128/platform/api/studentScore', {}, {
+      params: {
+        ids: ids || null
+      },
+      responseType: 'blob'
     })
   },
   /**
