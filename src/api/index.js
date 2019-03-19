@@ -1,27 +1,15 @@
 import axios from 'axios'
-// axios.defaults.withCredentials = true
-// import md5 from 'js-md5'
-
-// axios.post(`http://45.40.192.128/platform/api/studentUser/registered`, {
-//   name: 'junhao3',
-//   password: md5('junhao3'),
-//   remark: 'junhao215',
-//   totalScore: 100
-// }, {
-//   headers: {'Content-Type': 'application/json'}
-// }).then(data => {
-//   console.log('data', data)
-// }).catch (err => console.log(err))
-// axios.get(`http://45.40.192.128/platform/api/test/user/2`).then(data => {
-//   console.log('data', data)
-// }).catch (err => console.log(err))
+// console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
+// let baseDomain = process.env.NODE_ENV === 'production' ? '' : 'http://45.40.192.128'
+let baseDomain = 'http://45.40.192.128'
+// let baseDomain = 'http://localhost:8090'
 export default {
   /**
    * 修改密码
    * @params {{id, password, oldPassword, role, userName}} params
    */
   updatePassword (params) {
-    return axios.post('http://45.40.192.128/platform/api/user/updatePwd', {
+    return axios.post(baseDomain + '/platform/api/user/updatePwd', {
       ...params
     })
   },
@@ -29,14 +17,14 @@ export default {
    * 用户注销
    */
   logout () {
-    return axios.post('http://45.40.192.128/platform/api/user/signOut')
+    return axios.post(baseDomain + '/platform/api/user/signOut')
   },
   /**
    * 获取用户登录状态
    */
-  getUserInfo () {
-    return axios.get('http://45.40.192.128/platform/api/user/checkLoginStatus')
-  },
+  // getUserInfo () {
+  //   return axios.get(baseDomain + '/platform/api/user/checkLoginStatus')
+  // },
   /**
    * 用户登录
    * @param {string} userName 
@@ -44,7 +32,7 @@ export default {
    * @param {string} role 
    */
   userLogin (userName, password, role) {
-    return axios.post('http://45.40.192.128/platform/api/user/login', {
+    return axios.post(baseDomain + '/platform/api/user/login', {
       userName, password, role
     })
   },
@@ -53,10 +41,29 @@ export default {
    * @param {string} teacherId 
    * @param {number} page 
    */
-  getTeacherInfos (teacherId, page) {
-    return axios.get('http://45.40.192.128/platform/api/teacher/infos', {
+  getTeacherInfos (teacherId, page, role) {
+    return axios.get(baseDomain + '/platform/api/teacher/infos', {
       params: {
-        teacherId, page
+        teacherId, page, role
+      }
+    })
+  },
+  /**
+   * 添加考勤记录
+   * @params {{createTime,dateTime,leaderId,teacherId}} params
+   */
+  addAttendance (params) {
+    return axios.post(baseDomain + '/platform/api/attendance/addAttendance', {
+      params
+    })
+  },
+  /**
+   * 查询组内教师
+   */
+  getTeacherInfoByLeaderId (leaderId) {
+    return axios.get(baseDomain + '/platform/api/teacher/groupTeachers', {
+      params: {
+        leaderId
       }
     })
   },
@@ -64,14 +71,14 @@ export default {
    * 查询组长列表
    */
   getLeaderInfos () {
-    return axios.get('http://45.40.192.128/platform/api/teacher/leaders')
+    return axios.get(baseDomain + '/platform/api/teacher/leaders')
   },
   /**
    * 注册教师
    * @param {{id, name, password, isLeader, leaderId, role}} params 
    */
   teacherRegister (params) {
-    return axios.post('http://45.40.192.128/platform/api/teacher/registered', {
+    return axios.post(baseDomain + '/platform/api/teacher/registered', {
       ...params
     })
   },
@@ -80,7 +87,7 @@ export default {
    * @param {string} id 
    */
   deleteTeacherById (id) {
-    return axios.post('http://45.40.192.128/platform/api/admin/deleteTeacher', {
+    return axios.post(baseDomain + '/platform/api/admin/deleteTeacher', {
       id
     })
   },
@@ -99,7 +106,7 @@ export default {
    * @param {number} subjectScore 
    */
   addSubject (subjectName, subjectScore) {
-    return axios.post('http://45.40.192.128/platform/api/subject/add', {
+    return axios.post(baseDomain + '/platform/api/subject/add', {
       subjectName, subjectScore
     })
   },
@@ -107,7 +114,7 @@ export default {
    * 查询全部答辩科目
    */
   getAllSubject () {
-    return axios.get('http://45.40.192.128/platform/api/subject/query')
+    return axios.get(baseDomain + '/platform/api/subject/query')
   },
   /**
    * 更新答辩科目分值
@@ -115,7 +122,7 @@ export default {
    * @param {number} subjectScore
    */
   updateSubjectScore (id, subjectScore) {
-    return axios.post('http://45.40.192.128/platform/api/subject/update', {}, {
+    return axios.post(baseDomain + '/platform/api/subject/update', {}, {
       params: {
         id, subjectScore
       }
@@ -127,8 +134,10 @@ export default {
    * @param {number} subjectScore
    */
   deleteSubject (id) {
-    return axios.post('http://45.40.192.128/platform/api/subject/delete', {
-      id
+    return axios.post(baseDomain + '/platform/api/subject/delete', {}, {
+      params: {
+        id
+      }
     })
   },
   /**
@@ -136,7 +145,7 @@ export default {
    * @param {string} studentId
    */
   getSelfInfo (studentId) {
-    return axios.get('http://45.40.192.128/platform/api/studentUser/query', {
+    return axios.get(baseDomain + '/platform/api/studentUser/query', {
       params: {
         studentId
       }
@@ -147,7 +156,7 @@ export default {
    * @param {string} id 
    */
   deleteStudentById (id) {
-    return axios.post('http://45.40.192.128/platform/api/admin/deleteTeacher', {
+    return axios.post(baseDomain + '/platform/api/admin/deleteTeacher', {
       id
     })
   },
@@ -156,7 +165,7 @@ export default {
    * @param {{id:string, name:string, password:string, totalScore:number, remark:string}} params
    */
   updateStudentInfo (params) {
-    return axios.post('http://45.40.192.128/platform/api/studentUser/update', {
+    return axios.post(baseDomain + '/platform/api/studentUser/update', {
       ...params
     })
   },
@@ -166,7 +175,7 @@ export default {
    * @param {string} remark 
    */
   updateStudentRemark (id, remark) {
-    return axios.post('http://45.40.192.128/platform/api/studentUser/updateRemark', {
+    return axios.post(baseDomain + '/platform/api/studentUser/updateRemark', {
       id, remark
     })
   },
@@ -175,23 +184,16 @@ export default {
    * @param {{id:string, name:string, password:string, totalScore:number, remark:string}} params 
    */
   studentRegister (params) {
-    return axios.post('http://45.40.192.128/platform/api/studentUser/registered', {
+    return axios.post(baseDomain + '/platform/api/studentUser/registered', {
       ...params
     })
   },
   /**
    * 查询所有学生信息
-   * @param {number} page 
+   * @param {{page, orderType, start, end}} params 
    */
-  getAllStudentInfo (page, orderType, start) {
-    let params = {
-      page,
-      orderType
-    }
-    if (start) {
-      params.start = start
-    }
-    return axios.get('http://45.40.192.128/platform/api/studentUser/infos', {
+  getAllStudentInfo (params) {
+    return axios.get(baseDomain + '/platform/api/studentUser/infos', {
       params
     })
   },
@@ -202,29 +204,30 @@ export default {
    * @param {string} userId 
    */
   updateGrade (id, score, userId) {
-    return axios.post('http://45.40.192.128/platform/api/studentScore/update', {
+    return axios.post(baseDomain + '/platform/api/studentScore/update', {
       id, score, userId
     })
   },
   /**
    * 组长提交学生成绩
    * @param {string} ids 
-   * @param {string} userId 
    */
-  commitStudentGrades (ids, userId) {
-    return axios.post('http://45.40.192.128/platform/api/studentScore/updateStatus', {
-      ids, userId
+  commitStudentGrades (ids) {
+    return axios.post(baseDomain + '/platform/api/studentScore/updateStatus', {}, {
+      params: {
+        ids
+      }
     })
   },
   /**
    * 查询组内学生成绩
-   * @param {string} teacherId 
+   * @param {string} leaderId 
    * @param {number} page 
    */
-  getSelfGroupGrades (teacherId, page) {
-    return axios.get('http://45.40.192.128/platform/api/studentScore/teacher', {
+  getSelfGroupGrades (leaderId, page) {
+    return axios.get(baseDomain + '/platform/api/studentScore/teacher', {
       params: {
-        teacherId, page
+        leaderId, page
       }
     })
   },
@@ -234,7 +237,7 @@ export default {
    * @param {number} page 
    */
   getCommitedGrades (userId, page) {
-    return axios.get('http://45.40.192.128/platform/api/studentScore/selectConfirmMsg', {
+    return axios.get(baseDomain + '/platform/api/studentScore/selectConfirmMsg', {
       params: {
         userId, page
       }
@@ -243,17 +246,15 @@ export default {
   /**
    * 添加学生答辩成绩
    * @param {{
-   *  id: number,
-   *  status: number,
    *  studentId: string,
    *  studentName: string,
    *  totalScore: number,
-   *  updateBy: string
+   *  createBy: string
    * }} params 
    * 
    */
   addNewGrade (params) {
-    return axios.post('http://45.40.192.128/platform/api/studentScore/add', {
+    return axios.post(baseDomain + '/platform/api/studentScore/add', {
       ...params
     })
   },
@@ -262,12 +263,7 @@ export default {
    * @param {string} ids 
    */
   outputScore (ids) {
-    // return axios.post('http://45.40.192.128/platform/api/studentScore', {}, {
-    //   params: {
-    //     ids: ids || null
-    //   }
-    // })
-    return axios.post('http://45.40.192.128/platform/api/studentScore', {}, {
+    return axios.post(baseDomain + '/platform/api/studentScore', {}, {
       params: {
         ids: ids || null
       },
@@ -278,17 +274,20 @@ export default {
    * 导出分组信息
    * @param {string} teacherId 
    */
-  outPutGroupDataByTeacherId (teacherId) {
-    return axios.post('http://45.40.192.128/platform/api/studentGroup/dataOutput', {
-      teacherId
+  outputGroupDataByTeacherId (teacherId) {
+    return axios.post(baseDomain + '/platform/api/studentGroup/dataOutput', {}, {
+      params: {
+        teacherId
+      },
+      responseType: 'blob'
     })
   },
   /**
-   * 删除分组
-   * @param {string} id 
+   * 删除分组中某个学生
+   * @param {string} id  groupId
    */
-  deleteGroup (id) {
-    return axios.get('http://45.40.192.128/platform/api/studentGroup/delete', {
+  removeStudentFromGroup (id) {
+    return axios.get(baseDomain + '/platform/api/studentGroup/delete', {
       params: {
         id
       }
@@ -300,8 +299,10 @@ export default {
    * @param {string} studentIds 
    */
   addNewGroup (teacherId, studentIds) {
-    return axios.post('http://45.40.192.128/platform/api/studentGroup/group', {
-      teacherId, studentIds
+    return axios.post(baseDomain + '/platform/api/studentGroup/group', {}, {
+      params: {
+        teacherId, studentIds
+      }
     })
   },
   /**
@@ -310,7 +311,7 @@ export default {
    * @param {number} page 
    */
   getSelfGroupInfo (teacherId, page) {
-    return axios.get('http://45.40.192.128/platform/api/studentGroup/teacher', {
+    return axios.get(baseDomain + '/platform/api/studentGroup/teacher', {
       params: {
         teacherId, page
       }
@@ -318,21 +319,16 @@ export default {
   },
   /**
    * 查询未分组学生
-   * @param {number} page 
    */
-  getUnGroupedStudents (page) {
-    return axios.get('http://45.40.192.128/platform/api/studentGroup/unGrouped', {
-      params: {
-        page
-      }
-    })
+  getUnGroupedStudents () {
+    return axios.get(baseDomain + '/platform/api/studentGroup/unGrouped')
   },
   /**
    * 添加考勤及记录
    * @param {{dateTime:string, id:number, leaderId:string, teacherId:string}} params 
    */
   addAttendance (params) {
-    return axios.post('http://45.40.192.128/platform/api/attendance/addAttendance', {
+    return axios.post(baseDomain + '/platform/api/attendance/addAttendance', {
       ...params
     })
   },
@@ -342,7 +338,7 @@ export default {
    * @param {number} page 
    */
   getSelfAttendanceHistory (teacherId, page) {
-    return axios.get('http://45.40.192.128/platform/api/attendance/history', {
+    return axios.get(baseDomain + '/platform/api/attendance/history', {
       params: {
         teacherId, page
       }

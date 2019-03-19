@@ -8,7 +8,7 @@
     <span class="header_logo" v-if="logo" v-text="logo"></span>
     <i class="header_menu-btn" @click="emitMenu"></i>
     <span class="header_userinfo">
-      <span v-if="!username">
+      <span v-if="!username" class="header_exit">
         <router-link to="/login">登录</router-link>
       </span>
       <span v-else>
@@ -58,11 +58,15 @@ export default {
 <style lang="scss" scoped>
 @import '@/assets/style/minix.scss';
 .header {
+  a {
+    color: #fff;
+    text-decoration: none;
+  }
   @include clearf;
   position: relative;
   padding: 0 20px;
   min-height: 60px;
-  color: #666;
+  color: #fff;
   background: rgba(255, 255, 255, 0.795);
   line-height: 60px;
   white-space: nowrap;
@@ -79,7 +83,7 @@ export default {
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5);
   .header_exit {
     margin: 0 12px;
-    text-decoration: underline;
+    // text-decoration: underline;
     &:hover {
       color: rgb(176, 220, 231);
       cursor: pointer;
@@ -89,12 +93,12 @@ export default {
     position: absolute;
     display: none;
     top: 50%;
-    left: 12px;
-    margin-top: -12px;
-    width: 24px;
-    height: 24px;
+    left: 11px;
+    margin-top: -11px;
+    width: 22px;
+    height: 21px;
     background-image: url('../../assets/images/menu.png');
-    background-size: 24px;
+    background-size: 22px;
     background-repeat: no-repeat;
   }
 }

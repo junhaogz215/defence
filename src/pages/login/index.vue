@@ -26,7 +26,10 @@
             </div>
             <div class="main_form-item">
               <div>选择身份：</div>
-              <el-select v-model="selectedRole" placeholder="选择身份">
+              <el-select
+                size="mini"
+                v-model="selectedRole" 
+                placeholder="选择身份">
                 <el-option 
                   v-for="(val, i) in roles"
                   :key="val"
@@ -35,8 +38,14 @@
               </el-select>
             </div>
             <div class="main_form-item">
-              <el-button type="primary" @click="submit">登录</el-button>
-              <el-button type="success" @click="toPassword">
+              <el-button
+                size="mini"
+                type="primary"
+                @click="submit">登录</el-button>
+              <el-button
+                size="mini"
+                type="success"
+                @click="toPassword">
                 修改密码
               </el-button>
             </div>
@@ -94,33 +103,13 @@ export default {
         return
       }
       let res = await api.userLogin(this.username, this.password, this.selectedRole)
-      // let res = await api.userLogin(this.username, md5(this.password), this.selectedRole)
 
       this.resMsg(res, '登陆成功', '登陆失败')
       if (res.data.status) {
-        localStorage.setItem('userInfo', JSON.stringify(res.data))
         this.$store.commit('setUserInfo', res.data)
-        this.jumpOut(+this.userInfo.data.role)
+        this.jumpByRole(this.$router, +this.userInfo.data.role)
       } else {
         this.$store.commit('logout')
-      }
-    },
-    jumpOut (role) {
-      switch (role) {
-        // 管理员
-        case 1:
-          this.$router.push('/studentinfo')
-          break
-        // 教师
-        case 2:
-          this.$router.push('/markgrade')
-          break
-        // 学生
-        case 3:
-          this.$router.push('/mygrade')
-          break
-        default:
-          this.$message('权限信息缺失')
       }
     }
   }

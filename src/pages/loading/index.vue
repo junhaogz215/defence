@@ -13,28 +13,22 @@
 </style>
 
 <script>
-import {routes, roleRoutes} from '@/router'
+import {routes} from '@/router'
 import api from '@/api'
+import commonTemplate from '@/commonTemplate'
+
 export default {
+  mixins: [commonTemplate],
   data () {
     return {}
   },
-  async created () {
-    let res = await api.getUserInfo()
-    if (res && res.data && res.data.status) {
-      console.log('已登录', res.data)
+  created () {
+    let userInfo = this.$store.state && this.$store.state.userInfo || {}
+    if (userInfo.isLogin) {
+      this.jumpByRole(this.$router, +userInfo.data.role)
     } else {
-      console.log('未登录', res.data)
+      this.$router.push({path: '/login'})
     }
-    let isLogin = false
-    setTimeout(() => {
-      if (isLogin) {
-        // TODO: 跳有权限页面
-      } else {
-        // TODO: 登录页面
-        this.$router.push({path: '/login'})
-      }
-    }, 1000)
   }
 };
 </script>

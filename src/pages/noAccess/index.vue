@@ -10,6 +10,11 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+section {
+  text-align: center;
+  font-size: 20px;
+  margin-top: 150px;
+  color: rgb(182, 179, 179);
+}
 </style>

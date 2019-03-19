@@ -37,19 +37,24 @@
                 v-model="secondNewPassword">
               </el-input>
             </div>
-            <div class="main_form-item">
+            <!-- <div class="main_form-item">
               <div>选择身份：</div>
-              <el-select v-model="selectedRole" placeholder="选择身份">
+              <el-select 
+                v-model="selectedRole"
+                placeholder="选择身份"
+                size="mini">
                 <el-option 
                   v-for="(val, i) in roles"
                   :key="val"
                   :value="val"
                   :label="i"></el-option>
               </el-select>
-            </div>
+            </div> -->
             <div class="main_form-item">
-              <el-button type="success" @click="submit">确认修改</el-button>
-              <el-button type="primary" @click="toLogin">去登陆</el-button>
+              <el-button
+                size="mini"
+                type="success"
+                @click="submit">确认修改</el-button>
             </div>
           </div>
         </section>
@@ -69,11 +74,11 @@ export default {
       selectedRole: '2',
       oldPassword: '',
       newPassword: '',
-      secondNewPassword: '',
-      roles: {
-        '学生': '3',
-        '教师': '2'
-      }
+      secondNewPassword: ''
+      // roles: {
+      //   '学生': '3',
+      //   '教师': '2'
+      // }
     }
   },
   watch: {
@@ -121,11 +126,11 @@ export default {
         })
       } else {
         let userInfo = store.state.userInfo.data
-        console.log('userinfo', userInfo)
+        // console.log('userinfo', userInfo)
         let res = await api.updatePassword({
           id: userInfo.id || userInfo.uid,
           userName: userInfo.userName,
-          role: this.selectedRole,
+          role: userInfo.role,
           password: this.newPassword,
           oldPassword: this.oldPassword
         })

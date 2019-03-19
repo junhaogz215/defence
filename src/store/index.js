@@ -2,6 +2,8 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import mutations from './mutations'
 import actions from './actions'
+import { powerConfig } from '@/config'
+import { routes } from '@/router/index'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -15,7 +17,7 @@ export default new Vuex.Store({
       }
     },
     hideMenu: true,
-    backgroundColor: '#fff',
+    backgroundColor: '#0084FF',
     menus: []
   },
   mutations,

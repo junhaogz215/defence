@@ -9,7 +9,7 @@ import MyGrade from '@/pages/grademanage/MyGrade'
 import StudentGroup from '@/pages/studentmanage/StudentGroup'
 import StudentInfo from '@/pages/studentmanage/StudentInfo'
 import TeacherClockIn from '@/pages/teachermanage/TeacherClockIn'
-import TeacherGroup from '@/pages/teachermanage/TeacherGroup'
+// import TeacherGroup from '@/pages/teachermanage/TeacherGroup'
 import TeacherInfo from '@/pages/teachermanage/TeacherInfo'
 import NoAccess from '@/pages/noAccess/index'
 
@@ -24,7 +24,7 @@ export default {
   StudentGroup,
   StudentInfo,
   TeacherClockIn,
-  TeacherGroup,
+  // TeacherGroup,
   TeacherInfo,
   MyGrade,
   NoAccess
@@ -41,7 +41,7 @@ export {
   StudentGroup,
   StudentInfo,
   TeacherClockIn,
-  TeacherGroup,
+  // TeacherGroup,
   TeacherInfo,
   MyGrade,
   NoAccess

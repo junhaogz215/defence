@@ -25,6 +25,25 @@ export default {
         type: 'error',
         message: tooltip || '操作失败'
       })
+    },
+    jumpByRole (router, role) {
+      if (!router || !role) return
+      switch (role) {
+        // 管理员
+        case 1:
+          router.push('/studentinfo')
+          break
+        // 教师
+        case 2:
+          router.push('/markgrade')
+          break
+        // 学生
+        case 3:
+          router.push('/mygrade')
+          break
+        default:
+          router.push('/login')
+      }
     }
   }
 }

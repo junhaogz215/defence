@@ -6,19 +6,19 @@
       </div>
       <el-button 
         type="success" 
-        size="samll"
+        size="mini"
         @click="handleAdd(clearForm)">新增</el-button>
       <el-table
         :data="tableData"
         style="width: 100%">
         <el-table-column
           prop="subjectName"
-          label="科目名称"
+          label="得分项名称"
           width="180">
         </el-table-column>
         <el-table-column
           prop="subjectScore"
-          label="科目分值"
+          label="得分项分值"
           width="180">
         </el-table-column>
         <el-table-column
@@ -45,10 +45,10 @@
       </el-row> -->
     </el-card>
     <el-dialog 
-      :title="isHandelAdd ? '新增科目' : '修改科目信息'" 
+      :title="isHandelAdd ? '新增得分项' : '修改得分项信息'" 
       :visible.sync="dialogFormVisible">
-      <el-form :model="form" label-position="left" label-width="80px">
-       <el-form-item label="科目名称:">
+      <el-form :model="form" label-position="left" label-width="100px">
+       <el-form-item label="得分项名称:">
           <el-select
             v-if="!isHandelAdd"
             v-model="form.selectedSubjectName"
@@ -60,21 +60,26 @@
               :label="val.subjectName" 
               :value="val.subjectName"></el-option>
           </el-select>
-          <el-input 
+          <el-input
             v-else 
             v-model="form.selectedSubjectName"
-            placeholder="请输入科目名称"></el-input>
+            placeholder="请输入得分项名称"></el-input>
         </el-form-item>
-        <el-form-item label="科目分值:">
+        <el-form-item label="得分项分值:">
           <el-input 
             v-model="form.selectedSubjectScore" 
-            placeholder="请输入科目分值"
+            placeholder="请输入得分项分值"
             style="width: 222px"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit">保 存</el-button>
+        <el-button 
+          size="mini"
+          @click="dialogFormVisible = false">取 消</el-button>
+        <el-button
+          size="mini"
+          type="primary" 
+          @click="submit">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -104,7 +109,7 @@ export default {
       let { id } = row
       if (!id) this.handleError()
       let res = await apis.deleteSubject(+id)
-      this.resMsg(res, '科目删除成功', '科目删除失败')
+      this.resMsg(res, '得分项删除成功', '得分项删除失败')
       this.initProjectInfo()
     },
     async submit () {
@@ -142,7 +147,7 @@ export default {
       let { id, selectedSubjectName, selectedSubjectScore } = this.form
       if (!selectedSubjectName || !selectedSubjectScore) {
         this.$message({
-          message: '科目名称和科目分值不能为空！',
+          message: '得分项名称和得分项分值不能为空！',
           showClose: true,
           type: 'error'
         })

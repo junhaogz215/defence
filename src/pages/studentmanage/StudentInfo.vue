@@ -5,12 +5,14 @@
         {{$route.name}}
       </header>
       <div class="condition">
-        <el-button 
+        <el-button
+          v-show="userInfo.data && +userInfo.data.role === 1"
           class="condition-item"
           type="success" 
-          size="samll"
+          size="mini"
           @click="handleAdd(clearForm)">新增学生</el-button>
         <el-upload
+          v-show="userInfo.data && +userInfo.data.role === 1"
           class="condition-item"
           ref="upload"
           action="http://45.40.192.128/platform/api/studentUser/dataImport"
@@ -18,15 +20,16 @@
           :on-success="uploadSuccess"
           :file-list="excelFile"
           :limit="1">
-          <el-button size="samll" type="primary">excel批量导入</el-button>
+          <el-button size="mini" type="primary">excel批量导入</el-button>
         </el-upload>
-          <el-button size="samll" type="primary" @click="outputScore">导出成绩</el-button>
+          <el-button size="mini" type="primary" @click="outputScore">导出成绩</el-button>
       </div>
-
       <div class="condition margintop" :style="{margin: '20px 0'}">
         <el-radio class="condition-item" v-model="orderType" :label="1">升序</el-radio>
         <el-radio v-model="orderType" :label="2">降序</el-radio>
-        <el-checkbox v-model="onlyShowPass">筛选未通过答辩学生</el-checkbox>
+        <el-radio class="condition-item" :label="1" v-model="displayRule">所有</el-radio>
+        <el-radio class="condition-item" :label="2" v-model="displayRule">通过答辩</el-radio>
+        <el-radio :label="3" v-model="displayRule">未通过答辩</el-radio>
       </div>
       <el-table
         :data="tableData[currentPage]"
@@ -51,9 +54,11 @@
           >
           <template slot-scope="scope">
             <el-button
+              v-show="userInfo.data && (+userInfo.data.role === 1 || +userInfo.data.teacherRole === 0)"
               size="mini"
               @click="handleEdit(scope.$index, scope.row, setForm)">修改</el-button>
             <el-button
+              v-show="userInfo.data && +userInfo.data.role === 1"
               size="mini"
               type="danger"
               @click="handleDelete(scope.$index, scope.row, deleteStudent)">删除</el-button>
@@ -75,7 +80,11 @@
       :visible.sync="dialogFormVisible">
       <el-form :model="form" label-position="left" label-width="80px">
         <el-form-item label="学生姓名:">
-          <el-input v-model="form.name" autocomplete="off" placeholder="请输入学生姓名"></el-input>
+          <el-input 
+            v-model="form.name"
+            autocomplete="off"
+            placeholder="请输入学生姓名"
+            :readonly="userInfo.data && userInfo.data.teacherRole === 0"></el-input>
         </el-form-item>
         <el-form-item label="密码:" v-show="isHandelAdd">
           <el-input v-model="form.password" show-password autocomplete="off" placeholder="请输入登录密码"></el-input>
@@ -83,13 +92,14 @@
         <el-form-item label="备注:">
           <el-input v-model="form.remark" autocomplete="off" placeholder="请输入学生备注"></el-input>
         </el-form-item>
-        <el-form-item v-show="!isHandelAdd && form.totalScore" label="分数:">
+        <!--TODO:-->
+        <el-form-item v-show="!isHandelAdd && form.totalScore && false" label="分数:">
           <el-input v-model="form.totalScore" autocomplete="off" placeholder="学生成绩"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit">保 存</el-button>
+        <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="submit">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -98,7 +108,6 @@
 <script>
 import template from '../ManageTemplate'
 import commonTemplate from '@/commonTemplate'
-// import md5 from 'js-md5'
 import api from '@/api'
 export default {
   mixins: [template, commonTemplate],
@@ -110,12 +119,16 @@ export default {
       this.currentPage = 1
       this.getStudentInfo(this.currentPage)
     },
-    onlyShowPass (val) {
+    displayRule (val) {
+      console.log(val)
       this.currentPage = 1
       this.getStudentInfo(this.currentPage)
     }
   },
   computed: {
+    userInfo () {
+      return this.$store.state.userInfo
+    }
   },
   data () {
     return {
@@ -128,7 +141,7 @@ export default {
       },
       excelFile: undefined,
       currentPage: 1,
-      onlyShowPass: false,
+      displayRule: 1, // 1:展示所有 2：只展示及格成绩 3： 只展示不及格
       orderType: 2, // 2 降序 其他升序
       pages: 0 // 信息总页数
     }
@@ -149,6 +162,13 @@ export default {
         }).then(() => {
           api.outputScore()
           .then(response => {
+            if (response && response.data && response.data.status === false) {
+              this.$message({
+                message: response.data.msg || '导出错误',
+                type: 'error'
+              })
+              return
+            }
             let blob = new Blob([response.data])
             var downloadElement = document.createElement('a')
         　　var href = window.URL.createObjectURL(blob); //创建下载的链接
@@ -158,7 +178,7 @@ export default {
         　　downloadElement.click(); //点击下载
         　　document.body.removeChild(downloadElement); //下载完成移除元素
         　　window.URL.revokeObjectURL(href); //释放掉blob对象 
-            console.log(response);
+            console.log('response', response);
           })
           .catch(function(error) {
             console.log(error);
@@ -235,7 +255,21 @@ export default {
       }
     },
     async getStudentInfo (page) {
-      let res = await api.getAllStudentInfo(page, this.orderType, this.onlyShowPass ? '60' : null)
+      let params = {
+        page,
+        orderType: this.orderType
+      }
+      switch (this.displayRule) {
+        case 1:
+          break
+        case 2:
+          params.start = 60
+          break
+        case 3:
+          params.end = 59
+          break
+      }
+      let res = await api.getAllStudentInfo(params)
       if (res && res.data && res.data.status) {
         console.log('getAllStudentInfo', res.data.data.list)
         this.pages = res.data.data.pages

@@ -1,7 +1,7 @@
 <template>
   <div class="wrapper">
     <Header class="layout_header" 
-      :logo="'defence'" 
+      :logo="'智慧答辩平台'" 
       :username="userInfo.data.userName"
       @exit="onExit"
       @menu="onMenu"
@@ -59,8 +59,6 @@ export default {
     onMenu (hide) {
       this.$store.commit('hideMenu', hide)
     }
-  },
-  created () {
   }
 }
 </script>

@@ -1,54 +1,68 @@
 
 import store from '@/store'
 import { Message } from 'element-ui';
-import api from '@/api';
+import { powerConfig } from '@/config'
+let checkPower = function (routes, to) {
+  return routes.indexOf(to.path) > -1
+}
 export default function (router) {
   router.beforeEach(async (to, from, next) => {
-    if (to.path === '/noaccess') next()
     let userInfo = store && store.state && store.state.userInfo
-    let storageUserInfo = JSON.parse(localStorage.getItem('userInfo'))
-    console.log('beforeEachUserInfo:', userInfo)
-    if (!userInfo) {
+    let storageUserInfo = JSON.parse(localStorage.getItem('userInfo')) || {}
+    let noLogin = !userInfo || (userInfo && !userInfo.isLogin && !storageUserInfo.status)
+    if (to.path === '/login' || to.path === '/') {
+      store.commit('setUserInfo', storageUserInfo)
+      next()
+      return
+    }
+    if (to.path !== '/login' && noLogin) {
       Message('未登录用户只能访问登录页面')
       next('/login')
       return
-    }
-
-    // 如果storage中的状态是已登录那就获取当前用户登录信息
-    if (!userInfo.isLogin && storageUserInfo) {
-      // let res = await api.getUserInfo()
-      // if (res && res.data && res.data.status) {
-        // store.commit('setUserInfo', storageUserInfo)
-        // }
+    } else {
+      // store无登录信息且localStorage有登陆信息
       store.commit('setUserInfo', storageUserInfo)
-    }
-
-    if (!userInfo.isLogin) {
-      if (to.path !== '/login') {
-        Message('未登录用户只能访问登录页面')
-        next('/login')
-        return
-      } else {
-        next()
-        return
-      }
     }
 
     if (userInfo.isLogin) {
       switch (userInfo.data && +userInfo.data.role) {
+        // 管理员
         case 1:
-          next()
+          if (checkPower(powerConfig.adminRoutes, to)) {
+            next()
+          } else {
+            next('/noaccess')
+          }
           break
+        // 教师
         case 2:
-          next()
+          if (+userInfo.data.isLeader === 1) {
+            if (checkPower(powerConfig.leaderRoutes, to)) {
+              next()
+            } else {
+              next('/noaccess')
+            }
+          } else {
+            if (checkPower(powerConfig.teacherRoutes, to)) {
+              next()
+            } else {
+              next('/noaccess')
+            }
+          }
           break
+        // 学生
         case 3:
-          next()
+          if (checkPower(powerConfig.studentRoutes, to)) {
+            next()
+          } else {
+            next('/noaccess')
+          }
           break
         default:
           next('/noaccess')
       }
     }
+    next()
     console.log('routerto:', to)
   })
 }

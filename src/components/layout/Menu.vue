@@ -1,6 +1,6 @@
 <template>
   <el-menu
-    :background-color="bgColor"
+    :background-color="'#fff'"
     default-active="2"
     class="defence-menu"
   >
@@ -8,7 +8,7 @@
       v-for="(val, i) in menus"
       :to="val.path" 
       :key="i">
-      <el-menu-item :index="val.path">
+      <el-menu-item :index="val.path" v-show="!val.hidden">
           {{val.name}}
       </el-menu-item>
     </router-link>

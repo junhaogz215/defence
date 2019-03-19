@@ -11,23 +11,5 @@ export default {
 </script>
 
 <style lang="scss">
-body {
-  margin: 0;
-  // font-size: 1
-  color: #303133;
-  a {
-    text-decoration: none;
-    color: #303133;
-  }
-}
-@media screen and (max-width: 900px) {
-  .el-dialog {
-    width: 70%;
-  }
-}
-@media screen and (max-width: 500px) {
-  .el-dialog {
-    width: 100%;
-  }
-}
+@import '@/assets/style/base.scss';
 </style>

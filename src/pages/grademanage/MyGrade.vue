@@ -49,7 +49,8 @@ export default {
       let res = await api.getSelfInfo(userInfo.data.id || userInfo.data.uid)
       console.log(res)
       if (res && res.data && res.data.status) {
-        this.tableData[0] = res.data.data
+        console.log('this.tableData', this.tableData)
+        this.$set(this.tableData, 0, res.data.data)
       } else {
         this.$message('查询信息失败')
       }

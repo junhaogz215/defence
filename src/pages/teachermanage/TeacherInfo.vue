@@ -9,7 +9,7 @@
         <el-button
           class="condition-item"
           type="success" 
-          size="samll"
+          size="mini"
           @click="handleAdd(clearForm)">新增教师</el-button>
         <el-upload
           class="condition-item"
@@ -19,7 +19,7 @@
           :on-success="uploadSuccess"
           :file-list="excelFile"
           :limit="1">
-          <el-button size="samll" type="primary">通过excel批量导入</el-button>
+          <el-button size="mini" type="primary">通过excel批量导入</el-button>
         </el-upload>
       </section>
        <el-table
@@ -95,7 +95,9 @@
             <!-- <el-input v-model="form.remark" autocomplete="off" placeholder="请输入学生备注"></el-input> -->
           </el-form-item>
           <el-form-item v-show="form.isLeader === '否'" label="选择组长:">
-            <el-select v-model="leaderIndex">
+            <el-select 
+              v-model="leaderIndex"
+              filterable>
               <el-option 
                 v-for="(val, i) in leadersData"
                 :value="i"
@@ -106,8 +108,8 @@
         </div>
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button @click="dialogFormVisible = false">取 消</el-button>
-        <el-button type="primary" @click="submit">保 存</el-button>
+        <el-button size="mini" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="mini" type="primary" @click="submit">保 存</el-button>
       </div>
     </el-dialog>
   </div>
@@ -125,13 +127,11 @@ export default {
       this.getTeacherInfoByPage(val)
     },
     leaderIndex (val) {
-      console.log('leaderIndex', val)
+      // console.log('leaderIndex', val)
       if (!this.leadersData[val]) return
       this.form.leaderName = this.leadersData[val].name
-      this.form.id = this.leadersData[val].id
+      this.form.leaderId = this.leadersData[val].id
     }
-  },
-  computed: {
   },
   data () {
     return {
@@ -140,6 +140,7 @@ export default {
         name: '',
         password: '',
         isLeader: '',
+        leaderId: '',
         leaderName: '',
         role: '' // 0：辅导员 1：非辅导员普通教师
       },
@@ -162,13 +163,13 @@ export default {
     },
     async getLeaderData () {
       let res = await api.getLeaderInfos()
-      console.log('getLeaderData:', res)
+      // console.log('getLeaderData:', res)
       if (res && res.data && res.data.data) {
         this.leadersData = res.data.data
       }
     },
     async submit () {
-      let {id, name, password, role, isLeader, leaderName} = this.form
+      let {id, name, password, role, isLeader, leaderName, leaderId} = this.form
       if (this.isHandelAdd) { // 注册教师
         if (!name || !password) {
           this.$message({
@@ -189,16 +190,18 @@ export default {
             name, password,
             role: role === '是' ? 0 : 1,
             isLeader: isLeader === '是' ? 1 : 0,
-            leaderName 
+            leaderName,
+            leaderId
           })
-          console.log('注册信息', {
-            name, password,
-            role: role === '是' ? 0 : 1,
-            isLeader: isLeader === '是' ? 1 : 0,
-            leaderName
-          })
+          // console.log('注册信息', {
+          //   name, password,
+          //   role: role === '是' ? 0 : 1,
+          //   isLeader: isLeader === '是' ? 1 : 0,
+          //   leaderName
+          // })
           this.resMsg(res, '注册成功', '注册失败')
           if (res && res.data && res.data.status) {
+            this.getLeaderData()
             this.getTeacherInfoByPage(this.currentPage)
             this.dialogFormVisible = false
           }
@@ -257,7 +260,7 @@ export default {
     },
     uploadSuccess (res, file, fileList) {
       if (!res) return
-      console.log('fileList,', fileList)
+      // console.log('fileList,', fileList)
       this.$refs.upload.clearFiles()
       if (res.status) {
         this.$message({

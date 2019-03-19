@@ -7,7 +7,6 @@ Vue.use(Router)
 const roleRoutes = {
   touristRoutes: [
     '/login',
-    '/password',
     '/noaccess'
   ],
   adminRoutes: [
@@ -16,7 +15,7 @@ const roleRoutes = {
     '/studentinfo',
     '/studentgroup',
     '/teacherinfo',
-    '/teachergroup',
+    // '/teachergroup',
     '/projectmange',
     '/gradeinfo',
     '/gradecharts',
@@ -32,10 +31,8 @@ const roleRoutes = {
     '/noaccess'
   ],
   leaderRoutes: [
+    '/gradeinfo',
     '/clockingin',
-  ],
-  instructorRoutes: [
-    '/studentinfo'
   ],
   studentRoutes: [
     '/mygrade',
@@ -54,7 +51,8 @@ const routes = [
   {
     path: '/noaccess',
     name: '无权访问',
-    component: pages.NoAccess
+    component: pages.NoAccess,
+    hidden: true
   },
   {
     path: '/login',
@@ -81,19 +79,19 @@ const routes = [
     name: '学生分组',
     component: pages.StudentGroup
   },
-  {
-    path: '/teachergroup',
-    name: '教师分组',
-    component: pages.TeacherGroup
-  },
+  // {
+  //   path: '/teachergroup',
+  //   name: '教师分组',
+  //   component: pages.TeacherGroup
+  // },
   {
     path: '/projectmange',
-    name: '科目管理',
+    name: '得分项管理',
     component: pages.ProjectManage
   },
   {
     path: '/gradeinfo',
-    name: '成绩管理',
+    name: '成绩审核',
     component: pages.GradeInfo
   },
   {
@@ -108,7 +106,7 @@ const routes = [
   },
   {
     path: '/markgrade',
-    name: '成绩评定',
+    name: '教师评分',
     component: pages.MarkGrade
   },
   {
@@ -119,14 +117,14 @@ const routes = [
 ]
 // 根据权限展示路由，下次封装到mutation里
 
-let menus = roleRoutes.adminRoutes.map(val => {
-  console.log(routes.filter(v => v.path === val))
-  return routes.filter(v => v.path === val)[0]
-})
+// let menus = roleRoutes.adminRoutes.map(val => {
+//   console.log(routes.filter(v => v.path === val))
+//   return routes.filter(v => v.path === val)[0]
+// })
 
-store.commit('setMenu', menus)
+// store.commit('setMenu', menus)
 export default new Router({
   routes
 })
 
-export {routes, roleRoutes}
+export { routes }
