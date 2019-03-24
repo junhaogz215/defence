@@ -35,7 +35,7 @@ export default {
           break
         // 教师
         case 2:
-          router.push('/markgrade')
+          router.push('/studentinfo')
           break
         // 学生
         case 3:

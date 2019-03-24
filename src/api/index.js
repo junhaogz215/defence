@@ -1,8 +1,7 @@
 import axios from 'axios'
-// console.log('process.env.NODE_ENV:', process.env.NODE_ENV)
-// let baseDomain = process.env.NODE_ENV === 'production' ? '' : 'http://45.40.192.128'
-let baseDomain = 'http://45.40.192.128'
-// let baseDomain = 'http://localhost:8090'
+let baseDomain = process.env.NODE_ENV === 'production' ? '' : 'http://45.40.192.128'
+// let baseDomain = 'http://45.40.192.128'
+// let baseDomain = 'http://localhost:8090' 给他们用这个把上面两句删掉
 export default {
   /**
    * 修改密码
@@ -49,12 +48,15 @@ export default {
     })
   },
   /**
-   * 添加考勤记录
-   * @params {{createTime,dateTime,leaderId,teacherId}} params
+   * 查询某教师考勤记录
+   * @param {string} teacherId 
+   * @param {number} page 
    */
-  addAttendance (params) {
-    return axios.post(baseDomain + '/platform/api/attendance/addAttendance', {
-      params
+  getTeacherSelfAttendance(teacherId, page) {
+    return axios.get(baseDomain + '/platform/api/attendance/history', {
+      params: {
+        teacherId, page
+      }
     })
   },
   /**
@@ -269,6 +271,12 @@ export default {
       },
       responseType: 'blob'
     })
+  },
+  /**
+   * 获取成绩图表信息
+   */
+  getScoreChartInfo () {
+    return axios.get(baseDomain + '/platform/api/admin/showScore')
   },
   /**
    * 导出分组信息

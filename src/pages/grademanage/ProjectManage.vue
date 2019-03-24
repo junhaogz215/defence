@@ -130,7 +130,6 @@ export default {
       if (res && res.data && res.data.status) {
         this.tableData = res.data.data
       }
-      console.log('projectDatas', this.tableData)
     },
     async setForm (index, row) {
       this.form.selectedSubjectName = row && row.subjectName

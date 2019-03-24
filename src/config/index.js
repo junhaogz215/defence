@@ -8,12 +8,12 @@ const powerConfig = {
   // 管理员可访问路由
   adminRoutes: [
     // '/login',
-    '/teacherinfo',
     '/studentinfo',
+    '/gradecharts',
     '/studentgroup',
+    '/teacherinfo',
     '/projectmange',
     // '/gradeinfo',
-    '/gradecharts',
     // '/markgrade',
     // '/clockingin',
     // '/mygrade',
@@ -26,14 +26,17 @@ const powerConfig = {
     '/studentinfo',
     '/markgrade',
     '/noaccess',
+    '/gradecharts',
+    '/myClockin',
     '/password'
   ],
   // 组长可访问路由
   leaderRoutes: [
+    '/studentinfo',
     '/markgrade',
     '/gradeinfo',
-    '/studentinfo',
     '/clockingin',
+    '/gradecharts',
     '/password',
     '/noaccess',
   ],

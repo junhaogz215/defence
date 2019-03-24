@@ -108,7 +108,6 @@ export default {
   watch: {
     selectedTeacherId (val) {
       this.getGroupDataByTeacherId(val)
-      console.log('selectedTeacherId', val)
     },
     selectedStudentIds (val) {
     }
@@ -144,10 +143,8 @@ export default {
   },
   methods: {
     handleRemove(file, fileList) {
-      console.log(file, fileList);
     },
     handlePreview(file) {
-      console.log(file);
     },
     handleExceed(files, fileList) {
       this.$message.warning(`最多上传一个文件`);
@@ -189,7 +186,6 @@ export default {
           this.$set(this.groupDatas, 'list', [])
           this.$set(this.groupDatas, 'info', {})
         }
-        console.log('groupDatas', this.groupDatas)
       } else {
         this.handleError('分组信息获取失败')
       }
@@ -273,7 +269,6 @@ export default {
         　　downloadElement.click(); //点击下载
         　　document.body.removeChild(downloadElement); //下载完成移除元素
       　　  window.URL.revokeObjectURL(href); //释放掉blob对象 
-            console.log('response', response);
           })
           .catch(function(error) {
             console.log(error);

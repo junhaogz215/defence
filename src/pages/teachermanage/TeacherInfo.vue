@@ -34,6 +34,9 @@
           prop="isLeader"
           label="是否组长"
           width="150">
+          <template slot-scope="scope">
+            {{ scope.row.isLeader === 1 ? '是' : '否' }}
+          </template>
         </el-table-column>
         <el-table-column
           prop="leaderName"
@@ -44,6 +47,9 @@
           prop="role"
           label="是否辅导员"
           width="150">
+          <template slot-scope="scope">
+            {{ scope.row.role === 0 ? '是' : '否' }}
+          </template>
         </el-table-column>
         <el-table-column
           align="right"
@@ -82,19 +88,18 @@
         </el-form-item>
         <el-form-item label="是否辅导员:">
           <el-select v-model="form.role">
-            <el-option :value="'是'">是</el-option>
-            <el-option :value="'否'">否</el-option>
+            <el-option :value="0" label="是"></el-option>
+            <el-option :value="1" label="否"></el-option>
           </el-select>
         </el-form-item>
-        <div v-show="form.role === '否'">
+        <div v-show="form.role === 1">
           <el-form-item label="是否组长：">
-            <el-select v-model="form.isLeader" :disabled="!isHandelAdd && form.isLeader === '是' && alreadyIsLeader === '是'">
-              <el-option :value="'是'">是</el-option>
-              <el-option :value="'否'">否</el-option>
+            <el-select v-model="form.isLeader" :disabled="!isHandelAdd && form.isLeader === 1 && alreadyIsLeader === 1">
+              <el-option :value="1" label="是"></el-option>
+              <el-option :value="0" label="否"></el-option>
             </el-select>
-            <!-- <el-input v-model="form.remark" autocomplete="off" placeholder="请输入学生备注"></el-input> -->
           </el-form-item>
-          <el-form-item v-show="form.isLeader === '否'" label="选择组长:">
+          <el-form-item v-show="form.isLeader === 0" label="选择组长:">
             <el-select 
               v-model="leaderIndex"
               filterable>
@@ -127,7 +132,6 @@ export default {
       this.getTeacherInfoByPage(val)
     },
     leaderIndex (val) {
-      // console.log('leaderIndex', val)
       if (!this.leadersData[val]) return
       this.form.leaderName = this.leadersData[val].name
       this.form.leaderId = this.leadersData[val].id
@@ -163,7 +167,6 @@ export default {
     },
     async getLeaderData () {
       let res = await api.getLeaderInfos()
-      // console.log('getLeaderData:', res)
       if (res && res.data && res.data.data) {
         this.leadersData = res.data.data
       }
@@ -178,7 +181,7 @@ export default {
             type: 'error'
           })
           return
-        } else if (role === '否' && isLeader === '否' && !leaderName) {
+        } else if (role === 1 && isLeader === 0 && !leaderName) {
           this.$message({
             message: '请选择一名组长',
             showClose: true,
@@ -187,18 +190,13 @@ export default {
           return
         } else {
           let res = await api.teacherRegister({
-            name, password,
-            role: role === '是' ? 0 : 1,
-            isLeader: isLeader === '是' ? 1 : 0,
+            name,
+            password,
+            role,
+            isLeader,
             leaderName,
             leaderId
           })
-          // console.log('注册信息', {
-          //   name, password,
-          //   role: role === '是' ? 0 : 1,
-          //   isLeader: isLeader === '是' ? 1 : 0,
-          //   leaderName
-          // })
           this.resMsg(res, '注册成功', '注册失败')
           if (res && res.data && res.data.status) {
             this.getLeaderData()
@@ -214,7 +212,7 @@ export default {
             type: 'error'
           })
           return
-        } else if (isLeader === '否' && leaderName === '-') {
+        } else if (isLeader === 0 && !leaderName) {
           this.$message({
             message: '请选择一名组长',
             showClose: true,
@@ -226,9 +224,9 @@ export default {
           let res = await api.updateTeacherInfo({
             id,
             name,
-            role: role === '是' ? 0 : 1,
-            isLeader: isLeader === '是' ? 1 : 0,
-            leaderName: leaderName === '-' ? undefined : leaderName
+            role,
+            isLeader,
+            leaderName
           })
           this.resMsg(res, '修改成功', '修改失败')
           if (res && res.data && res.data.status) {
@@ -254,13 +252,12 @@ export default {
       keys.map(val => {
         this.form[val] = undefined
       })
-      this.form.role = '否'
-      this.form.isLeader = '否'
+      this.form.role = 1
+      this.form.isLeader = 0
       this.leaderIndex = undefined
     },
     uploadSuccess (res, file, fileList) {
       if (!res) return
-      // console.log('fileList,', fileList)
       this.$refs.upload.clearFiles()
       if (res.status) {
         this.$message({
@@ -281,15 +278,7 @@ export default {
       let res = await api.getTeacherInfos(null, page)
       this.pages = res.data.data.pages
       let list = res.data.data.list
-      console.log('getTeacherInfoByPage', list)
-      list.map(val => {
-        val.role = val.role === 1 ? '否' : '是'
-        val.isLeader = val.isLeader === 1 ? '是' : '否'
-        val.leaderName = val.leaderName || '-'
-      })
       if (res && res.data && res.data.status) {
-        // this.rawDatas = res.data.data.list
-        // this.$set(this.rawDatas, page, res.data.data.list)
         this.$set(this.tableData, page, res.data.data.list)
       } else {
         this.$message({

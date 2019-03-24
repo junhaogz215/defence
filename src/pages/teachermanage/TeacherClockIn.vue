@@ -66,9 +66,6 @@ import api from '@/api'
 export default {
   mixins: [template, commonTemplate],
   watch: {
-    date (val) {
-      console.log(val)
-    }
   },
   computed: {
     userInfo () {
@@ -98,11 +95,17 @@ export default {
           type: 'warning'
         }).then(async () => {
           let info = this.selectedTeacherInfo
-          let res = api.addAttendance({
+          let date = this.date
+          let dateTime = date.getFullYear() + '-' + (date.getMonth() + 1) + '-' + date.getDate()
+          let res = await api.addAttendance({
             leaderId: info.leaderId,
             teacherId: info.id,
-            dateTime: this.date // TODO:
+            dateTime
           })
+          this.resMsg(res, '添加考勤记录成功', '添加考勤记录失败')
+          if (res && res.data && res.data.status) {
+            this.dialogFormVisible = false
+          }
         })
     },
     async initTeacherList () {

@@ -126,7 +126,6 @@ export default {
         })
       } else {
         let userInfo = store.state.userInfo.data
-        // console.log('userinfo', userInfo)
         let res = await api.updatePassword({
           id: userInfo.id || userInfo.uid,
           userName: userInfo.userName,

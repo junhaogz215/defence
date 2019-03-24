@@ -117,7 +117,6 @@ export default {
     },
     handleSelectionChange(val) {
       this.selectedStudentInfos = val
-      console.log(val)
     }
   },
   created () {

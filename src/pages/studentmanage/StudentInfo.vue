@@ -120,7 +120,6 @@ export default {
       this.getStudentInfo(this.currentPage)
     },
     displayRule (val) {
-      console.log(val)
       this.currentPage = 1
       this.getStudentInfo(this.currentPage)
     }
@@ -178,7 +177,6 @@ export default {
         　　downloadElement.click(); //点击下载
         　　document.body.removeChild(downloadElement); //下载完成移除元素
         　　window.URL.revokeObjectURL(href); //释放掉blob对象 
-            console.log('response', response);
           })
           .catch(function(error) {
             console.log(error);
@@ -197,9 +195,7 @@ export default {
           })
           return
         } else {
-          // this.form.password = md5(this.form.password)
           let res = await api.studentRegister(this.form)
-          console.log('注册信息', this.form)
           this.resMsg(res, '注册成功', '注册失败')
           if (res && res.data && res.data.status) {
             this.getStudentInfo(this.currentPage)
@@ -237,7 +233,6 @@ export default {
     },
     uploadSuccess (res, file, fileList) {
       if (!res) return
-      console.log('fileList,', fileList)
       this.$refs.upload.clearFiles()
       if (res.status) {
         this.$message({
@@ -271,7 +266,6 @@ export default {
       }
       let res = await api.getAllStudentInfo(params)
       if (res && res.data && res.data.status) {
-        console.log('getAllStudentInfo', res.data.data.list)
         this.pages = res.data.data.pages
         this.$set(this.tableData, page, res.data.data.list)
       } else {

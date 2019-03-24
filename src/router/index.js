@@ -4,44 +4,6 @@ import pages from '@/pages'
 import store from '../store'
 
 Vue.use(Router)
-const roleRoutes = {
-  touristRoutes: [
-    '/login',
-    '/noaccess'
-  ],
-  adminRoutes: [
-    '/login',
-    '/password',
-    '/studentinfo',
-    '/studentgroup',
-    '/teacherinfo',
-    // '/teachergroup',
-    '/projectmange',
-    '/gradeinfo',
-    '/gradecharts',
-    '/markgrade',
-    '/clockingin',
-    '/mygrade',
-    '/noaccess'
-  ],
-  teacherRoutes: [
-    '/studentinfo',
-    '/password',
-    '/markgrade',
-    '/noaccess'
-  ],
-  leaderRoutes: [
-    '/gradeinfo',
-    '/clockingin',
-  ],
-  studentRoutes: [
-    '/mygrade',
-    '/password',
-    '/noaccess'
-  ]
-}
-const teacherRoutes = [
-]
 const routes = [
   {
     path: '/',
@@ -105,6 +67,11 @@ const routes = [
     component: pages.TeacherClockIn
   },
   {
+    path: '/myClockin',
+    name: '考勤记录查询',
+    component: pages.MyClockin
+  },
+  {
     path: '/markgrade',
     name: '教师评分',
     component: pages.MarkGrade
@@ -115,14 +82,7 @@ const routes = [
     component: pages.MyGrade
   }
 ]
-// 根据权限展示路由，下次封装到mutation里
 
-// let menus = roleRoutes.adminRoutes.map(val => {
-//   console.log(routes.filter(v => v.path === val))
-//   return routes.filter(v => v.path === val)[0]
-// })
-
-// store.commit('setMenu', menus)
 export default new Router({
   routes
 })

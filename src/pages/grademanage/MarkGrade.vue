@@ -107,7 +107,6 @@ export default {
       }
       this.dialogFormVisible = true
       this.currentStudentInfo = row
-      console.log(' this.currentStudentInfo', this.currentStudentInfo)
     },
     submit () {
       let subjectDatas = this.subjectDatas
@@ -181,18 +180,14 @@ export default {
           this.$set(this.scoreForm, val.subjectName, '')
         })
       }
-      console.log('all subject', res.data.data)
     },
     handleEdit(index, row) {
       this.dialogFormVisible = true
-      console.log(index, row);
     },
     handleDelete(index, row) {
-      console.log(index, row);
     },
     async getMyStudents () {
       let userData = this.userInfo && this.userInfo.data
-      console.log('userData', userData)
       if (!userData) return
       let res = await api.getSelfGroupInfo(userData.uid, 1)
       if (res && res.data && res.data.status === false) {
@@ -204,7 +199,6 @@ export default {
       } else {
         this.studentDatas = res.data.data.list
       }
-      console.log('myStudent', res.data.data)
     }
   },
   created () {

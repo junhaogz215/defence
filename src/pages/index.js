@@ -11,6 +11,7 @@ import StudentInfo from '@/pages/studentmanage/StudentInfo'
 import TeacherClockIn from '@/pages/teachermanage/TeacherClockIn'
 // import TeacherGroup from '@/pages/teachermanage/TeacherGroup'
 import TeacherInfo from '@/pages/teachermanage/TeacherInfo'
+import MyClockin from '@/pages/teachermanage/MyClockin'
 import NoAccess from '@/pages/noAccess/index'
 
 export default {
@@ -27,7 +28,8 @@ export default {
   // TeacherGroup,
   TeacherInfo,
   MyGrade,
-  NoAccess
+  NoAccess,
+  MyClockin
 }
 
 export {
@@ -44,5 +46,6 @@ export {
   // TeacherGroup,
   TeacherInfo,
   MyGrade,
-  NoAccess
+  NoAccess,
+  MyClockin
 }

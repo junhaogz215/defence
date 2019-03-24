@@ -21,13 +21,11 @@ export default {
   },
   methods: {
     handleEdit(index, row, callback) {
-      console.log(index, row)
       this.dialogFormVisible = true
       this.isHandelAdd = false
       callback && callback(index, row)
     },
     handleDelete(index, row, successCallback, failCallback) {
-      console.log(index, row)
       this.$confirm(`确认删除该条数据, 是否继续?`, '提示', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
